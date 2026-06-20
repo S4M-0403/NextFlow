@@ -1,0 +1,86 @@
+.react-flow__handle.workflow-handle {
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.react-flow__handle.workflow-handle.connectingto,
+.react-flow__handle.workflow-handle.connectingfrom {
+  transform: scale(1.2);
+}
+
+.react-flow__handle.workflow-handle.valid {
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.45) !important;
+}
+
+.react-flow__handle.workflow-handle.invalid {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.45) !important;
+  animation: workflow-handle-shake 0.35s ease;
+}
+
+@keyframes workflow-handle-shake {
+  0%,
+  100% {
+    transform: translateX(0) scale(1.2);
+  }
+  25% {
+    transform: translateX(-2px) scale(1.2);
+  }
+  75% {
+    transform: translateX(2px) scale(1.2);
+  }
+}
+
+.workflow-connection-line-valid {
+  animation: workflow-connection-dash 0.6s linear infinite;
+}
+
+@keyframes workflow-connection-dash {
+  to {
+    stroke-dashoffset: -18;
+  }
+}
+
+.react-flow__edge-path {
+  stroke: #8b5cf6;
+}
+
+.react-flow__edge.animated path {
+  stroke: #8b5cf6;
+  stroke-dasharray: 5;
+  animation: workflow-edge-flow 0.45s linear infinite;
+}
+
+@keyframes workflow-edge-flow {
+  to {
+    stroke-dashoffset: -10;
+  }
+}
+
+.node-shell-running {
+  animation: node-running-glow 1.4s ease-in-out infinite;
+}
+
+@keyframes node-running-glow {
+  0%,
+  100% {
+    box-shadow:
+      0 8px 30px rgba(15, 23, 42, 0.08),
+      0 0 0 0 rgba(139, 92, 246, 0.35);
+  }
+  50% {
+    box-shadow:
+      0 8px 30px rgba(15, 23, 42, 0.08),
+      0 0 0 6px rgba(139, 92, 246, 0.18);
+  }
+}
+
+.node-shell-success {
+  box-shadow:
+    0 8px 30px rgba(15, 23, 42, 0.08),
+    0 0 0 1px rgba(16, 185, 129, 0.2);
+}
+
+.node-shell-failed {
+  box-shadow:
+    0 8px 30px rgba(15, 23, 42, 0.08),
+    0 0 0 1px rgba(239, 68, 68, 0.2);
+}
