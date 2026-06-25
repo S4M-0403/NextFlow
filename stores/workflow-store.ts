@@ -11,17 +11,19 @@ import {
 import { create } from "zustand";
 import { workflowEngine } from "@/lib/execution/engine";
 import { getNodesForScope } from "@/lib/execution/dag";
+import demoWorkflow from "../lib/workflow/demo-workflow.json";
 import type {
   ExecutionScope,
   NodeExecutionStatus,
   WorkflowRun,
 } from "@/lib/execution/types";
-// import { initialEdges, initialNodes } from "@/lib/workflow/initial-graph";
+// import { initialEdges, initialNodes, responseWorkflow } from "../lib/workflow/initial-graph";
 import {
   initialEdges,
   initialNodes,
   REQUEST_INPUTS_NODE_ID,
   RESPONSE_NODE_ID,
+  responseWorkflow
 } from "@/lib/workflow/initial-graph";
 import {
   WORKFLOW_EDGE_OPTIONS,
@@ -190,23 +192,35 @@ export const useWorkflowStore = create<WorkflowStore>((set, get) => ({
   viewportCenter: null,
 
   initialize: (workflowId) => {
-    const persisted = loadPersistedWorkflow(workflowId);
+  const persisted = loadPersistedWorkflow(workflowId);
 
-    set({
-      workflowId,
-      nodes: persisted?.nodes ?? initialNodes,
-      edges: persisted?.edges ?? initialEdges,
-      runHistory: persisted?.runHistory ?? [],
-      recentNodeTypes: persisted?.recentNodeTypes ?? [],
-      selectedNodeIds: [],
-      nodeExecutionStates: {},
-      nodePickerOpen: false,
-      isExecuting: false,
-      past: [],
-      future: [],
-      viewportCenter: null,
-    });
-  },
+  let defaultNodes = demoWorkflow.nodes;
+  let defaultEdges = demoWorkflow.edges;
+
+  if (workflowId === "blank-workflow") {
+    defaultNodes = responseWorkflow.nodes;
+    defaultEdges = responseWorkflow.edges;
+  } else if (workflowId !== "demo-workflow") {
+    // Any newly created workflow starts blank
+    defaultNodes = initialNodes;
+    defaultEdges = initialEdges;
+  }
+
+  set({
+    workflowId,
+    nodes: persisted?.nodes ?? defaultNodes,
+    edges: persisted?.edges ?? defaultEdges,
+    runHistory: persisted?.runHistory ?? [],
+    recentNodeTypes: persisted?.recentNodeTypes ?? [],
+    selectedNodeIds: [],
+    nodeExecutionStates: {},
+    nodePickerOpen: false,
+    isExecuting: false,
+    past: [],
+    future: [],
+    viewportCenter: null,
+  });
+},
 
   setViewportCenter: (position) => set({ viewportCenter: position }),
 
@@ -276,18 +290,19 @@ export const useWorkflowStore = create<WorkflowStore>((set, get) => ({
     return;
   }
 
-  const state = get();
+  set((state) => {
+    const nodeIdsToRemove = new Set([nodeId]);
 
-  set({
-    past: pushPast(state),
-    future: [],
-    nodes: state.nodes.filter((node) => node.id !== nodeId),
-    edges: state.edges.filter(
-      (edge) => edge.source !== nodeId && edge.target !== nodeId,
-    ),
-    selectedNodeIds: state.selectedNodeIds.filter(
-      (id) => id !== nodeId,
-    ),
+    return {
+      past: pushPast(state),
+      future: [],
+      nodes: state.nodes.filter((node) => !nodeIdsToRemove.has(node.id)),
+      edges: state.edges.filter(
+        (edge) =>
+          !nodeIdsToRemove.has(edge.source) &&
+          !nodeIdsToRemove.has(edge.target),
+      ),
+    };
   });
 
   get().persistWorkflow();

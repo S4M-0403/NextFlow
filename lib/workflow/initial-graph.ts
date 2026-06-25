@@ -31,4 +31,38 @@ export const initialNodes: Node[] = [
   },
 ];
 
+export const responseWorkflow = {
+  nodes: [
+    {
+      id: "request-inputs",
+      type: "requestInputs",
+      position: { x: 100, y: 150 },
+      data: {
+        fields: [
+          {
+            id: "field-text-1",
+            type: "text",
+            label: "Text",
+            value: "",
+          },
+        ],
+      },
+    },
+    {
+      id: "response",
+      type: "response",
+      position: { x: 450, y: 150 },
+      data: {},
+    },
+  ],
+  edges: [
+    {
+      id: "edge-1",
+      source: "request-inputs",
+      target: "response",
+      sourceHandle: "output",
+      targetHandle: "result",
+    },
+  ],
+};
 export const initialEdges: Edge[] = [];

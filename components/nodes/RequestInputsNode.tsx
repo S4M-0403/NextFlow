@@ -128,28 +128,48 @@ export default function RequestInputsNode({ id, data, selected }: NodeProps) {
     type="file"
     accept="image/*"
     className="nodrag nowheel mt-1 w-full text-xs text-slate-900"
-    onChange={(e) => {
-      const file = e.target.files?.[0];
+    onChange={async (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
 
-      if (!file) return;
+  try {
+    const fd = new FormData();
+    fd.append("file", file);
 
-      const reader = new FileReader();
+    const res = await fetch("/api/transloadit/upload", {
+      method: "POST",
+      body: fd,
+    });
 
-      reader.onload = () => {
-        setFields(
-          nodeData.fields.map((f) =>
-            f.id === field.id
-              ? {
-                  ...f,
-                  value: reader.result as string,
-                }
-              : f
-          )
-        );
-      };
+    const data = await res.json();
 
-      reader.readAsDataURL(file);
-    }}
+    console.log(data);
+
+    // Temporary fallback until we know the exact response structure
+    const imageUrl =
+      data.url ??
+      data.ssl_url ??
+      data.result?.results?.original?.[0]?.ssl_url ??
+      data.result?.results?.original?.[0]?.url ??
+      data.results?.original?.[0]?.ssl_url ??
+      data.results?.original?.[0]?.url ??
+      "";
+
+    setFields(
+      nodeData.fields.map((f) =>
+        f.id === field.id
+          ? {
+              ...f,
+              value: imageUrl,
+            }
+          : f
+      )
+    );
+  } catch (err) {
+    console.error(err);
+    alert("Upload failed");
+  }
+}}
   />
 )}
 </div>

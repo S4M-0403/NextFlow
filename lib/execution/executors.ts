@@ -124,33 +124,57 @@ export class CropImageExecutor implements Executor {
   async execute(context: ExecutionContext): Promise<NodeExecutionResult> {
     const startedAt = Date.now();
 
-await new Promise((resolve) => setTimeout(resolve, 30000));
+    try {
+      const imageInput = context.inputs.image?.value;
 
-const duration = Date.now() - startedAt;
-    const imageInput = context.inputs.image?.value ?? "mock-image://source.png";
-    if (
-  typeof imageInput !== "string" ||
-  !imageInput.startsWith("data:image")
-) {
-  throw new Error("Invalid image input");
-}
-    const x = Number(context.nodeData.x ?? 0);
-    const y = Number(context.nodeData.y ?? 0);
-    const width = Number(context.nodeData.width ?? 100);
-    const height = Number(context.nodeData.height ?? 100);
+      if (typeof imageInput !== "string" || imageInput.length === 0) {
+        throw new Error("Invalid image input");
+      }
 
-    return {
-      nodeId: context.nodeId,
-      nodeName: "Crop Image",
-      nodeType: this.nodeType,
-      status: "success",
-      duration,
-      input: context.inputs,
-      output: {
-        type: "image",
-        value: String(imageInput),
-      },
-    };
+      const response = await fetch("/api/transloadit/crop", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          url: imageInput,
+          x: Number(context.nodeData.x ?? 0),
+          y: Number(context.nodeData.y ?? 0),
+          width: Number(context.nodeData.width ?? 100),
+          height: Number(context.nodeData.height ?? 100),
+        }),
+      });
+
+      const json = await response.json();
+
+      if (!response.ok) {
+        throw new Error(json.error ?? "Crop failed");
+      }
+
+      return {
+        nodeId: context.nodeId,
+        nodeName: "Crop Image",
+        nodeType: this.nodeType,
+        status: "success",
+        duration: Date.now() - startedAt,
+        input: context.inputs,
+        output: {
+          type: "image",
+          value: json.url,
+        },
+      };
+    } catch (error) {
+      return {
+        nodeId: context.nodeId,
+        nodeName: "Crop Image",
+        nodeType: this.nodeType,
+        status: "failed",
+        duration: Date.now() - startedAt,
+        input: context.inputs,
+        error:
+          error instanceof Error ? error.message : "Crop execution failed.",
+      };
+    }
   }
 }
 
