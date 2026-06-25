@@ -130,6 +130,7 @@ export class CropImageExecutor implements Executor {
       if (typeof imageInput !== "string" || imageInput.length === 0) {
         throw new Error("Invalid image input");
       }
+      await new Promise((resolve) => setTimeout(resolve, 30000));
 
       const response = await fetch("/api/transloadit/crop", {
         method: "POST",
