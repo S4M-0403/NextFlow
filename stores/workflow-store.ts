@@ -194,8 +194,8 @@ export const useWorkflowStore = create<WorkflowStore>((set, get) => ({
   initialize: (workflowId) => {
   const persisted = loadPersistedWorkflow(workflowId);
 
-  let defaultNodes = demoWorkflow.nodes;
-  let defaultEdges = demoWorkflow.edges;
+  let defaultNodes: Node[] = demoWorkflow.nodes as Node[];
+let defaultEdges: Edge[] = demoWorkflow.edges as Edge[];
 
   if (workflowId === "blank-workflow") {
     defaultNodes = responseWorkflow.nodes;

@@ -31,7 +31,10 @@ export const initialNodes: Node[] = [
   },
 ];
 
-export const responseWorkflow = {
+export const responseWorkflow: {
+  nodes: Node[];
+  edges: Edge[];
+} = {
   nodes: [
     {
       id: "request-inputs",
@@ -56,13 +59,20 @@ export const responseWorkflow = {
     },
   ],
   edges: [
-    {
-      id: "edge-1",
-      source: "request-inputs",
-      target: "response",
-      sourceHandle: "output",
-      targetHandle: "result",
+  {
+    id: "edge-1",
+    source: "request-inputs",
+    target: "response",
+    sourceHandle: "output",
+    targetHandle: "result",
+
+    type: "default",
+    animated: false,
+    style: {
+      stroke: "#6366f1",
+      strokeWidth: 2,
     },
-  ],
+  },
+],
 };
 export const initialEdges: Edge[] = [];
