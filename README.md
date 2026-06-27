@@ -137,28 +137,28 @@ Open `http://localhost:3000` to view the app.
 Example flows included in the demo:
 
 - Request Inputs → Gemini → Gemini → Response
-![alt text](image.png)
+![alt text](../ss/Screenshot%202026-06-27%20112627.png)
 
 - Request Inputs → Crop Image → Gemini → Response
-![alt text](image-1.png)
+![alt text](../ss/Screenshot%202026-06-27%20113128.png)
 
 ## Screenshots
 
 ### Workflow Canvas
 
-![alt text](image-2.png)
+![alt text](../ss/Screenshot%202026-06-27%20113212.png)
 
 ### Execution History
 
-![alt text](image-3.png)
+![alt text](../ss/Screenshot%202026-06-27%20113245.png)
 
 ### Gemini Workflow
 
-![alt text](image-4.png)
+![alt text](../ss/Screenshot%202026-06-27%20113314.png)
 
 ### Crop Workflow
 
-![alt text](image-5.png)
+![alt text](../ss/Screenshot%202026-06-27%20113332.png)
 
 ## Future Improvements
 
