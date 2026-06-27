@@ -158,7 +158,7 @@ Example flows included in the demo:
 
 ### Crop Workflow
 
-![alt text](../ss/Screenshot%202026-06-27%20113332.png)
+![alt text]("../ss/Screenshot%202026-06-27%20113332.png")
 
 ## Future Improvements
 
