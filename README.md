@@ -137,31 +137,32 @@ Open `http://localhost:3000` to view the app.
 Example flows included in the demo:
 
 - Request Inputs → Gemini → Gemini → Response
+![alt text](image.png)
 
 - Request Inputs → Crop Image → Gemini → Response
+![alt text](image-1.png)
 
 ## Screenshots
 
 ### Workflow Canvas
 
-_Placeholder: Workflow canvas screenshot goes here._
+![alt text](image-2.png)
 
 ### Execution History
 
-_Placeholder: Execution history screenshot goes here._
+![alt text](image-3.png)
 
 ### Gemini Workflow
 
-_Placeholder: Gemini node workflow screenshot goes here._
+![alt text](image-4.png)
 
 ### Crop Workflow
 
-_Placeholder: Crop node workflow screenshot goes here._
+![alt text](image-5.png)
 
 ## Future Improvements
 
 - PostgreSQL persistence using Prisma
-- Real image processing pipeline
 - Additional AI nodes (classification, embeddings, summarization)
 - File processing nodes (PDF, audio)
 - Collaboration support (shared workflows, multi-user editing)
@@ -172,4 +173,4 @@ Shikhar Maheshwari
 
 ---
 
-If you want changes to wording, additional badges, or a demo GIF added to the README, I can update it accordingly.
+
