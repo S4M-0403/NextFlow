@@ -76,7 +76,7 @@ export default function CropImageNode({ id, data, selected }: NodeProps) {
       <div className="space-y-3">
         <SliderInput
           label="X Position (%)"
-          type="number"
+          
           value={nodeData.x}
           onChange={(value) =>
   update({
@@ -86,7 +86,7 @@ export default function CropImageNode({ id, data, selected }: NodeProps) {
         />
         <SliderInput
           label="Y Position (%)"
-          type="number"
+          
           value={nodeData.y}
           onChange={(value) =>
   update({
@@ -96,7 +96,7 @@ export default function CropImageNode({ id, data, selected }: NodeProps) {
         />
         <SliderInput
           label="Width (%)"
-          type="number"
+         
           value={nodeData.width}
           onChange={(value) =>
   update({
@@ -106,7 +106,7 @@ export default function CropImageNode({ id, data, selected }: NodeProps) {
         />
         <SliderInput
           label="Height (%)"
-          type="number"
+          
           value={nodeData.height}
           onChange={(value) =>
   update({
