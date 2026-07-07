@@ -209,6 +209,7 @@ let defaultEdges: Edge[] = demoWorkflow.edges as Edge[];
   set({
     workflowId,
     nodes: persisted?.nodes ?? defaultNodes,
+    
     edges: persisted?.edges ?? defaultEdges,
     runHistory: persisted?.runHistory ?? [],
     recentNodeTypes: persisted?.recentNodeTypes ?? [],
@@ -227,11 +228,23 @@ let defaultEdges: Edge[] = demoWorkflow.edges as Edge[];
   setNodePickerOpen: (open) => set({ nodePickerOpen: open }),
 
   onNodesChange: (changes) => {
-    set((state) => ({
-      nodes: applyNodeChanges(changes, state.nodes),
-    }));
-    get().persistWorkflow();
-  },
+  set((state) => {
+    const filteredChanges = changes.filter((change) => {
+      if (change.type !== "remove") return true;
+
+      const node = state.nodes.find((n) => n.id === change.id);
+
+      return !node?.data?.locked;
+    });
+
+    return {
+      nodes: applyNodeChanges(filteredChanges, state.nodes),
+    };
+  });
+
+  get().persistWorkflow();
+},
+  
 
   onEdgesChange: (changes) => {
     set((state) => ({
@@ -281,14 +294,11 @@ let defaultEdges: Edge[] = demoWorkflow.edges as Edge[];
   },
 
   removeNode: (nodeId) => {
-  const protectedNodes = [
-    REQUEST_INPUTS_NODE_ID,
-    RESPONSE_NODE_ID,
-  ];
+  const node = get().nodes.find((n) => n.id === nodeId);
 
-  if (protectedNodes.includes(nodeId)) {
-    return;
-  }
+if (node?.data?.locked) {
+  return;
+}
 
   set((state) => {
     const nodeIdsToRemove = new Set([nodeId]);
