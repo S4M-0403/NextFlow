@@ -9,6 +9,7 @@ export const initialNodes: Node[] = [
     type: "requestInputs",
     position: { x: 100, y: 250 },
     data: {
+      "locked": true,
       fields: [
         {
           id: "field-text-1",
@@ -27,7 +28,9 @@ export const initialNodes: Node[] = [
     id: RESPONSE_NODE_ID,
     type: "response",
     position: { x: 950, y: 250 },
-    data: {},
+    data: {
+      "locked": true
+    },
   },
 ];
 
@@ -41,6 +44,7 @@ export const responseWorkflow: {
       type: "requestInputs",
       position: { x: 100, y: 150 },
       data: {
+        "locked": true,
         fields: [
           {
             id: "field-text-1",
@@ -55,7 +59,9 @@ export const responseWorkflow: {
       id: "response",
       type: "response",
       position: { x: 450, y: 150 },
-      data: {},
+      data: {
+        "locked": true
+      },
     },
   ],
   edges: [

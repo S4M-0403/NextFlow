@@ -1,15 +1,16 @@
 "use client";
 
 import { Position, useReactFlow, type NodeProps } from "@xyflow/react";
-import { Crop } from "lucide-react";
+
 import { useCallback } from "react";
 import NodeHandle from "./NodeHandle";
-import NodeInput from "./NodeInput";
+import SliderInput from "./SliderInput";
 import NodePortRow from "./NodePortRow";
 import NodeShell from "./NodeShell";
 import { HANDLE_COLORS, type CropImageData } from "@/lib/types/node-data";
 import type { NodeExecutionStatus } from "@/lib/execution/types";
 import { useWorkflowStore } from "@/stores/workflow-store";
+import { Crop, Upload } from "lucide-react";
 
 const defaultData: CropImageData = {
   x: 0,
@@ -43,18 +44,37 @@ export default function CropImageNode({ id, data, selected }: NodeProps) {
       onRun={() => void runSingleNode(id)}
       widthClassName="w-[300px]"
     >
-      <NodePortRow
-        nodeId={id}
-        label="Input Image"
-        handleId="image"
-        handleType="target"
-        dataType="image"
-        color={HANDLE_COLORS.image}
-        position={Position.Left}
-      />
+      <div className="relative mb-3">
+  <NodeHandle
+    type="target"
+    position={Position.Left}
+    id="image"
+    dataType="image"
+    color={HANDLE_COLORS.image}
+    style={{
+      left: -6,
+      top: "50%",
+      transform: "translateY(-50%)",
+    }}
+  />
+  
+  <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wide text-slate-500">
+    Input Image
+  </label>
 
-      <div className="grid grid-cols-2 gap-2">
-        <NodeInput
+  <label className="flex h-10 w-full cursor-pointer items-center justify-center gap-2 rounded-md border border-dashed border-slate-200 bg-white text-[11px] text-slate-400 transition hover:border-slate-300 hover:bg-slate-50">
+  <Upload className="h-3.5 w-3.5" />
+  Upload Image
+  <input
+    type="file"
+    accept="image/*"
+    className="hidden"
+  />
+</label>
+</div>
+
+      <div className="space-y-3">
+        <SliderInput
           label="X Position (%)"
           type="number"
           value={nodeData.x}
@@ -64,7 +84,7 @@ export default function CropImageNode({ id, data, selected }: NodeProps) {
   })
 }
         />
-        <NodeInput
+        <SliderInput
           label="Y Position (%)"
           type="number"
           value={nodeData.y}
@@ -74,7 +94,7 @@ export default function CropImageNode({ id, data, selected }: NodeProps) {
   })
 }
         />
-        <NodeInput
+        <SliderInput
           label="Width (%)"
           type="number"
           value={nodeData.width}
@@ -84,7 +104,7 @@ export default function CropImageNode({ id, data, selected }: NodeProps) {
   })
 }
         />
-        <NodeInput
+        <SliderInput
           label="Height (%)"
           type="number"
           value={nodeData.height}
@@ -96,22 +116,30 @@ export default function CropImageNode({ id, data, selected }: NodeProps) {
         />
       </div>
 
-      <div className="relative pt-1">
-        <NodeHandle
-          type="source"
-          position={Position.Right}
-          id="output-image"
-          dataType="image"
-          color={HANDLE_COLORS.output}
-          style={{ right: -6, top: "50%", transform: "translateY(-50%)" }}
-        />
-        <div className="flex items-center justify-between rounded-lg border border-slate-200 bg-sky-50 px-3 py-2.5">
-          <span className="text-xs font-semibold text-sky-700">Output Image</span>
-          <span className="text-[10px] uppercase tracking-wide text-sky-400">
-            Output
-          </span>
-        </div>
-      </div>
+      <div className="relative pt-3">
+  <NodeHandle
+    type="source"
+    position={Position.Right}
+    id="output-image"
+    dataType="image"
+    color={HANDLE_COLORS.output}
+    style={{ right: -6, top: "24px", transform: "translateY(-50%)" }}
+  />
+
+  <div className="mb-2 flex items-center justify-between">
+    <span className="text-xs font-semibold text-slate-700">
+      Output Image
+    </span>
+
+    <span className="text-[10px] uppercase tracking-wide text-sky-500">
+      Output
+    </span>
+  </div>
+
+  <div className="flex h-28 items-center justify-center rounded-lg border border-slate-200 bg-white text-xs text-slate-400">
+    No output yet
+  </div>
+</div>
     </NodeShell>
   );
 }

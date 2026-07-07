@@ -14,7 +14,13 @@ function loadWorkflows(): Workflow[] {
   if (!stored) return MOCK_WORKFLOWS;
 
   try {
-    return JSON.parse(stored) as Workflow[];
+    const parsed = JSON.parse(stored);
+
+if (!Array.isArray(parsed)) {
+  return MOCK_WORKFLOWS;
+}
+
+return parsed as Workflow[];
   } catch {
     return MOCK_WORKFLOWS;
   }
