@@ -173,16 +173,16 @@ const [collapsed, setCollapsed] = useState(false);
   )}
 
   <button
-    type="button"
-    onClick={() => setCollapsed(!collapsed)}
-    className="rounded-md p-1 hover:bg-slate-100"
-  >
-    {collapsed ? (
-      <ChevronLeft className="h-4 w-4" />
-    ) : (
-      <ChevronRight className="h-4 w-4" />
-    )}
-  </button>
+  type="button"
+  onClick={() => setCollapsed(!collapsed)}
+  className="rounded-md p-1 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900"
+>
+  {collapsed ? (
+    <ChevronLeft className="h-4 w-4" />
+  ) : (
+    <ChevronRight className="h-4 w-4" />
+  )}
+</button>
 
   {!collapsed && isExecuting && (
     <span className="rounded-full bg-violet-50 px-2 py-0.5 text-[10px] font-semibold text-violet-600">
