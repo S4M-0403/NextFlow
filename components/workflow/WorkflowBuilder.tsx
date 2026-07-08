@@ -19,8 +19,12 @@ export default function WorkflowBuilder({ workflowId }: WorkflowBuilderProps) {
   const workflowName = workflows.find((workflow) => workflow.id === workflowId)?.name;
 
   useEffect(() => {
-    initialize(workflowId);
-  }, [initialize, workflowId]);
+  async function loadWorkflow() {
+    await initialize(workflowId);
+  }
+
+  loadWorkflow();
+}, [initialize, workflowId]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {

@@ -68,6 +68,13 @@ function loadPersistedWorkflow(workflowId: string): PersistedWorkflow | null {
     return null;
   }
 }
+async function loadPersistedWorkflowFromDB(workflowId: string) {
+  const res = await fetch(`/api/workflows/${workflowId}`);
+
+  if (!res.ok) return null;
+
+  return res.json();
+}
 
 function applyExecutionResultsToNodes(
   nodes: Node[],
@@ -94,6 +101,19 @@ function applyExecutionResultsToNodes(
         },
       };
     }
+    if (result.nodeType === "cropImage") {
+  return {
+    ...node,
+    data: {
+      ...node.data,
+      outputImage:
+        result.status === "success" && result.output?.type === "image"
+          ? String(result.output.value)
+          : undefined,
+      executionError: result.error,
+    },
+  };
+}
 
     return node;
   });
@@ -191,9 +211,9 @@ export const useWorkflowStore = create<WorkflowStore>((set, get) => ({
   future: [],
   viewportCenter: null,
 
-  initialize: (workflowId) => {
-  const persisted = loadPersistedWorkflow(workflowId);
-
+  initialize: async (workflowId) => {
+    const persisted =
+      await loadPersistedWorkflowFromDB(workflowId);
   let defaultNodes: Node[] = demoWorkflow.nodes as Node[];
 let defaultEdges: Edge[] = demoWorkflow.edges as Edge[];
 

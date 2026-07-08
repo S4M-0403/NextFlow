@@ -137,7 +137,17 @@ export default function CropImageNode({ id, data, selected }: NodeProps) {
   </div>
 
   <div className="flex h-28 items-center justify-center rounded-lg border border-slate-200 bg-white text-xs text-slate-400">
+    {nodeData.outputImage ? (
+  <img
+    src={nodeData.outputImage}
+    alt="Crop Output"
+    className="mt-2 h-32 w-full rounded-md border border-slate-200 object-contain"
+  />
+) : (
+  <div className="flex h-28 items-center justify-center rounded-lg border border-slate-200 bg-white text-xs text-slate-400">
     No output yet
+  </div>
+)}
   </div>
 </div>
     </NodeShell>

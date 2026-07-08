@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
+import demoWorkflow from "@/lib/workflow/demo-workflow.json";
 
 export async function GET() {
   const { userId } = await auth();
@@ -15,6 +16,20 @@ export async function GET() {
       updatedAt: "desc",
     },
   });
+    if (workflows.length === 0) {
+  const demo = await prisma.workflow.create({
+    data: {
+      userId,
+      workflowId: "demo-workflow",
+      nodes: demoWorkflow.nodes,
+      edges: demoWorkflow.edges,
+      runHistory: [],
+      recentNodeTypes: [],
+    },
+  });
+
+  return NextResponse.json([demo]);
+}
 
   return NextResponse.json(workflows);
 }

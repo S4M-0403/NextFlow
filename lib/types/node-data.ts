@@ -28,6 +28,8 @@ export interface CropImageData {
   y: number;
   width: number;
   height: number;
+  outputImage?: string;
+  executionError?: string;
   [key: string]: unknown;
 }
 

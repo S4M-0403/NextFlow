@@ -7,23 +7,20 @@ import {
 } from "@/lib/mock/workflows";
 import type { Workflow } from "@/lib/types/workflow";
 
-function loadWorkflows(): Workflow[] {
-  if (typeof window === "undefined") return MOCK_WORKFLOWS;
+async function loadWorkflows(): Promise<Workflow[]> {
+  const res = await fetch("/api/workflows");
 
-  const stored = window.localStorage.getItem(WORKFLOWS_STORAGE_KEY);
-  if (!stored) return MOCK_WORKFLOWS;
-
-  try {
-    const parsed = JSON.parse(stored);
-
-if (!Array.isArray(parsed)) {
-  return MOCK_WORKFLOWS;
-}
-
-return parsed as Workflow[];
-  } catch {
+  if (!res.ok) {
     return MOCK_WORKFLOWS;
   }
+
+  const data = await res.json();
+
+  return data.map((workflow: any) => ({
+    id: workflow.workflowId,
+    name: "Untitled Workflow",
+    lastEdited: workflow.updatedAt,
+  }));
 }
 
 function saveWorkflows(workflows: Workflow[]) {
@@ -35,9 +32,14 @@ export function useWorkflows() {
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    setWorkflows(loadWorkflows());
+  async function initialize() {
+    const data = await loadWorkflows();
+    setWorkflows(data);
     setIsHydrated(true);
-  }, []);
+  }
+
+  initialize();
+}, []);
 
   useEffect(() => {
     if (isHydrated) {

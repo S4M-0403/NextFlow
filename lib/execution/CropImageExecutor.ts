@@ -22,7 +22,7 @@ export interface CropImageOutput {
 
 export async function executeCropImage(input: CropImageInput): Promise<CropImageOutput> {
   const { url, x, y, width, height } = input;
-
+  console.log("Crop input:", input);
   const response = await fetch("/api/transloadit/crop", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
