@@ -16,11 +16,23 @@ async function loadWorkflows(): Promise<Workflow[]> {
 
   const data = await res.json();
 
-  return data.map((workflow: any) => ({
+return [
+  {
+    id: "demo-workflow",
+    name: "Demo Workflow",
+    lastEdited: new Date().toISOString(),
+  },
+  {
+    id: "blank-workflow",
+    name: "Blank Workflow",
+    lastEdited: new Date().toISOString(),
+  },
+  ...data.map((workflow: any) => ({
     id: workflow.workflowId,
-    name: "Untitled Workflow",
+    name: workflow.workflowId, // or "Untitled Workflow"
     lastEdited: workflow.updatedAt,
-  }));
+  })),
+];
 }
 
 function saveWorkflows(workflows: Workflow[]) {

@@ -16,20 +16,7 @@ export async function GET() {
       updatedAt: "desc",
     },
   });
-    if (workflows.length === 0) {
-  const demo = await prisma.workflow.create({
-    data: {
-      userId,
-      workflowId: "demo-workflow",
-      nodes: demoWorkflow.nodes,
-      edges: demoWorkflow.edges,
-      runHistory: [],
-      recentNodeTypes: [],
-    },
-  });
-
-  return NextResponse.json([demo]);
-}
+    
 
   return NextResponse.json(workflows);
 }
