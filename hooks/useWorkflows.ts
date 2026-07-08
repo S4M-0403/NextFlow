@@ -16,6 +16,12 @@ async function loadWorkflows(): Promise<Workflow[]> {
 
   const data = await res.json();
 
+const userWorkflows = data.filter(
+  (workflow: any) =>
+    workflow.workflowId !== "demo-workflow" &&
+    workflow.workflowId !== "blank-workflow"
+);
+
 return [
   {
     id: "demo-workflow",
@@ -27,9 +33,9 @@ return [
     name: "Blank Workflow",
     lastEdited: new Date().toISOString(),
   },
-  ...data.map((workflow: any) => ({
+  ...userWorkflows.map((workflow: any) => ({
     id: workflow.workflowId,
-    name: workflow.workflowId, // or "Untitled Workflow"
+    name: workflow.name ?? "Untitled Workflow",
     lastEdited: workflow.updatedAt,
   })),
 ];
@@ -83,9 +89,24 @@ export function useWorkflows() {
     );
   }, []);
 
-  const deleteWorkflow = useCallback((id: string) => {
-    setWorkflows((current) => current.filter((workflow) => workflow.id !== id));
-  }, []);
+  const deleteWorkflow = useCallback(async (id: string) => {
+  try {
+    const res = await fetch(`/api/workflows/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to delete workflow");
+    }
+
+    setWorkflows((current) =>
+      current.filter((workflow) => workflow.id !== id)
+    );
+  } catch (err) {
+    console.error(err);
+    alert("Failed to delete workflow.");
+  }
+}, []);
 
   return {
     workflows,

@@ -2,6 +2,28 @@ import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { prisma } from "@/lib/prisma";
 
+export async function DELETE(
+  req: Request,
+  { params }: { params: Promise<{ workflowId: string }> }
+) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { workflowId } = await params;
+
+  await prisma.workflow.deleteMany({
+    where: {
+      userId,
+      workflowId,
+    },
+  });
+
+  return NextResponse.json({ success: true });
+} 
+
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ workflowId: string }> }
