@@ -43,3 +43,4 @@ Thumbs.db
 # temporary
 *.tmp
 *.temp
+/lib/generated/prisma

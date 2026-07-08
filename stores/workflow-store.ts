@@ -363,20 +363,43 @@ if (node?.data?.locked) {
     });
     get().persistWorkflow();
   },
-
+  
   persistWorkflow: () => {
+    
     const { workflowId, nodes, edges, runHistory, recentNodeTypes } = get();
-    if (!workflowId || typeof window === "undefined") return;
+    console.log("persistWorkflow called", workflowId);
+  if (!workflowId || typeof window === "undefined") return;
 
-    const payload: PersistedWorkflow = {
+  const payload: PersistedWorkflow = {
+    nodes,
+    edges,
+    runHistory,
+    recentNodeTypes,
+  };
+
+  // Keep localStorage for now (fallback)
+  window.localStorage.setItem(
+    getStorageKey(workflowId),
+    JSON.stringify(payload)
+  );
+console.log("Sending workflow to Prisma");
+  // Save to database
+  fetch("/api/workflows", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      workflowId,
       nodes,
       edges,
       runHistory,
       recentNodeTypes,
-    };
-
-    window.localStorage.setItem(getStorageKey(workflowId), JSON.stringify(payload));
-  },
+    }),
+  }).catch((err) => {
+    console.error("Failed to save workflow:", err);
+  });
+},
 
   exportWorkflow: () => {
     const { nodes, edges } = get();
