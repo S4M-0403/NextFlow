@@ -52,7 +52,7 @@ export default function Sidebar({
       >
         {!collapsed && (
           <span className="text-2xl font-bold tracking-tight text-slate-900">
-            Galaxy.ai
+            NextFlow
           </span>
         )}
 

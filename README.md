@@ -1,176 +1,237 @@
 # NextFlow
 
-A visual AI workflow builder inspired by no-code automation platforms. Users create workflows by connecting nodes on a canvas, execute nodes individually or run the full directed acyclic graph (DAG), and inspect execution history.
+> A full-stack AI workflow builder that enables users to visually design, execute, and persist AI-powered workflows using drag-and-drop nodes.
+
+![Workflow Builder](./assets/workflow.jpeg)
+
+## 🔗 Links
+
+- **Live Demo:** https://galaxy-ai-murex.vercel.app
+- **GitHub Repository:** https://github.com/S4M-0403/GalaxyAI
+
+## Hero
+
+NextFlow is a full-stack AI workflow builder that allows users to create visual workflows using drag-and-drop nodes, execute AI-powered tasks, and persist workflows across sessions and devices.
 
 ## Features
+✅ Visual drag-and-drop workflow editor
 
-Implemented Features:
+✅ Gemini AI integration
 
-- Request Inputs node
-  - Dynamic text inputs
-  - Dynamic image inputs
-  - User-entered values propagate through workflow execution
+✅ Image Crop node using Transloadit
 
-- Gemini 3.1 Pro node
-  - Prompt input
-  - System prompt input
-  - Gemini API integration
-  - Text generation output
-  - Connected inputs override manual fields
+✅ Clerk Authentication
 
-- Crop Image node
-  - Accepts image inputs
-  - Configurable crop parameters (X, Y, Width, Height)
-  - Image workflow support
+✅ PostgreSQL persistence with Prisma
 
-- Response node
-  - Displays workflow output
+✅ Execution history
 
-- Workflow Engine
-  - DAG execution
-  - Parallel execution of independent branches
-  - Fan-out support
-  - Single node execution
-  - Multi-node execution
-  - Full workflow execution
+✅ Cross-device workflow synchronization
 
-- Validation
-  - Type-safe connections
-  - DAG-only graph validation
-  - Cycle prevention
-  - Connection compatibility checking
+✅ Responsive interface
 
-- Canvas Features
-  - Zoom
-  - Pan
-  - MiniMap
-  - Animated edges
-  - Grid background
+✅ Locked template nodes
 
-- Workflow Management
-  - Undo / Redo
-  - Import workflow JSON
-  - Export workflow JSON
-  - Run history tracking
-  - Local persistence
+✅ Vercel deployment
 
-- Authentication
-  - Clerk authentication
-  - Protected dashboard routes
+## Screenshots
+
+### Dashboard
+
+![Dashboard](./assets/dashboard.jpeg)
+
+### Workflow Builder
+
+![Workflow Builder](./assets/workflow.jpeg)
+
+
+### Execution History
+
+![History](./assets/history.jpeg)
 
 ## Tech Stack
 
-- Next.js 16
-- React 19
-- TypeScript
-- Zustand
-- React Flow (@xyflow/react)
-- Clerk
-- Google Gemini API
-- Tailwind CSS
+- Frontend: Next.js (App Router), React, TypeScript
+- State: Zustand
+- Graph UI: React Flow
+- Styling: TailwindCSS
+- Backend: Next.js API routes
+- ORM: Prisma
+- Database: PostgreSQL (e.g., Neon)
+- Auth: Clerk
+- AI: Gemini API
+- File/Image processing: Transloadit
+- Deployment: Vercel
 
-## Architecture
+## Architecture Overview
 
-Brief overview:
+Frontend
 
-- Nodes: Units of computation or I/O (Request Inputs, Gemini, Crop Image, Response). Each node defines inputs, outputs, and execution behavior.
-- Handles: Node connection points used to route typed data between nodes; the connection layer enforces compatibility and directionality.
-- Executors: Small runtime adapters that run node logic (e.g., calling the Gemini API, performing crop parameter propagation) and return typed outputs.
-- Workflow execution engine: Orchestrates DAG traversal, schedules parallel branches, supports single-node and multi-node runs, and collects run traces for history.
-- Connection validation layer: Validates graph topology (DAG-only), prevents cycles, and enforces type compatibility before execution.
-- Zustand store: Central client-side state for the canvas, nodes, connections, and run history with local persistence.
+- Built with Next.js App Router and React components. UI state is handled with Zustand. The visual graph editor is implemented with React Flow and custom node components.
 
-## Project Structure
+Backend
 
-Top-level folders and purpose:
+- Next.js API routes serve the execution API and webhook endpoints. Prisma provides a typed database layer to persist workflows, nodes, runs, and user metadata in PostgreSQL.
+
+Authentication
+
+- Clerk provides user and session management, protecting API routes and enabling per-user workspace isolation.
+
+AI Services
+
+- Gemini is used for LLM-driven nodes; nodes that require image processing rely on Transloadit for reliable, scalable processing.
+
+Deployment
+
+- App and serverless API routes are designed to deploy to Vercel with environment-backed secrets and persistent Postgres hosted by Neon or similar.
+
+## Folder Structure
+
+Top-level folders and important modules:
 
 ```
-app/
-components/
-hooks/
-lib/
-stores/
-prisma/
-public/
+app/                # Next.js App Router, pages and API surface
+  layout.tsx
+  page.tsx
+  api/              # server routes: gemini, transloadit, workflows
+assets/             # image placeholders and static assets
+components/         # UI components and node definitions
+lib/                # app libraries: prisma, executors, ai integrations
+  prisma.ts
+  gemini/
+  execution/
+prisma/             # Prisma schema
+stores/             # client-side stores (Zustand)
+next.config.ts
+package.json
+README.md
 ```
 
-- `app/`: Next.js app routes, pages, layouts, and API route handlers.
-- `components/`: Reusable React UI components (canvas, node renderers, dashboard pieces).
-- `hooks/`: Custom React hooks (for workflows, connected state, and effects).
-- `lib/`: Core libraries such as the workflow engine, executors, node catalog, validation, and utility helpers.
-- `stores/`: Zustand stores for application state (workflow store, UI state, run history).
-- `prisma/`: Prisma schema for planned database persistence (not yet integrated).
-- `public/`: Static assets used by the app.
+## Getting Started
 
-## Running Locally
-
-1. Install dependencies
+Install dependencies:
 
 ```bash
 npm install
 ```
 
-2. Create `.env.local` at project root and add required variables:
-
-```
-GEMINI_API_KEY=
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
-CLERK_SECRET_KEY=
-```
-
-3. Start the dev server
+Development:
 
 ```bash
 npm run dev
 ```
 
-Open `http://localhost:3000` to view the app.
+Build for production:
 
-## Current Limitations
+```bash
+npm run build
+```
 
-- Crop node currently focuses on workflow behavior and parameter propagation (real image processing pipeline is not implemented).
-- Workflow persistence currently uses local storage for convenience and portability.
-- PostgreSQL/Prisma persistence is planned but not yet integrated.
+Run production build locally (optional):
 
-## Demo Workflow
+```bash
+npm start
+```
 
-Example flows included in the demo:
+## Environment Variables
 
-- Request Inputs → Gemini → Gemini → Response
-![alt text](../ss/Screenshot%202026-06-27%20112627.png)
+Create a `.env` file in the project root and populate the entries below. 
 
-- Request Inputs → Crop Image → Gemini → Response
-![alt text](../ss/Screenshot%202026-06-27%20113128.png)
+| Variable                            | Description                                              |
+| ----------------------------------- | -------------------------------------------------------- |
+| `DATABASE_URL`                      | PostgreSQL connection string used by Prisma (e.g., Neon) |
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk publishable key for client SDK                     |
+| `CLERK_SECRET_KEY`                  | Clerk secret key for server-side verification            |
+| `GEMINI_API_KEY`                    | API key for Gemini or other LLM provider                 |
+| `TRANSLOADIT_AUTH_KEY`              | Transloadit authentication key for image processing      |
 
-## Screenshots
+Example `.env` (DO NOT USE REAL VALUES):
 
-### Workflow Canvas
+```
+DATABASE_URL="postgresql://user:pass@host:5432/dbname"
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY="pk_test_xxx"
+CLERK_SECRET_KEY="sk_test_xxx"
+GEMINI_API_KEY="gemini_key_here"
+TRANSLOADIT_AUTH_KEY="transloadit_key_here"
+```
 
-![alt text](../ss/Screenshot%202026-06-27%20113212.png)
+## Running Locally
 
-### Execution History
+1. Install dependencies: `npm install`
+2. Create and populate `.env` with the required secrets
+3. Run database migrations:
 
-![alt text](../ss/Screenshot%202026-06-27%20113245.png)
+```bash
+npx prisma migrate dev --name init
+```
 
-### Gemini Workflow
+4. Start dev server:
 
-![alt text](../ss/Screenshot%202026-06-27%20113314.png)
+```bash
+npm run dev
+```
 
-### Crop Workflow
+Open `http://localhost:3000` and sign in via Clerk to create and manage workflows.
 
-![alt text]("../ss/Screenshot%202026-06-27%20113332.png")
+## Workflow Overview
+
+Workflows are graph-based documents composed of nodes. Each node encapsulates a unit of work (e.g., call Gemini, crop an image, send an HTTP request). The editor uses React Flow for layout and node connections. When a workflow executes, the engine resolves node dependencies (DAG), schedules node execution, routes outputs to connected inputs, and persists run metadata into the database.
+
+Key runtime behaviors:
+
+- DAG resolution and topological execution ordering
+- Node-level retries and error propagation
+- Execution instrumentation and per-run logs
+- Persistent storage for workflows and historical runs
+
+User
+   │
+   ▼
+Next.js UI
+   │
+React Flow
+   │
+Zustand
+   │
+API Routes
+   │
+──────────────
+│ Prisma
+│ Clerk
+│ Gemini
+│ Transloadit
+──────────────
+   │
+PostgreSQL
+
+## Technical Challenges
+
+- Migrated workflow persistence from localStorage to PostgreSQL using Prisma while preserving existing functionality.
+
+- Designed a persistence layer that synchronizes workflows and execution history across browser sessions and devices.
+
+- Integrated multiple third-party services including Gemini, Clerk, Neon, and Transloadit into a single workflow execution pipeline.
+
+- Debugged Prisma client generation, schema migrations, and production deployment issues during Vercel deployment.
+
+- Built reusable workflow nodes with a common execution interface to simplify future node additions.
 
 ## Future Improvements
 
-- PostgreSQL persistence using Prisma
-- Additional AI nodes (classification, embeddings, summarization)
-- File processing nodes (PDF, audio)
-- Collaboration support (shared workflows, multi-user editing)
+- Expand node library with specialized AI primitives (summarizers, extractors, multimodal nodes)
+- Real-time collaborative editing and presence indicators
+- Workflow sharing, templates, and marketplace for node packs
+- Versioned workflow history and rollbacks
+- Scheduling, triggers, and cron-like orchestration
+- Fine-grained RBAC and organizational multi-tenancy
+- Observability: metrics, tracing, and long-term run retention
 
-## Author
+## Demo
 
-Shikhar Maheshwari
+A hosted demo is recommended for evaluation. For a quick local demo, seed the database with the sample workflow in `lib/workflow/demo-workflow.json` then sign in and open the Workflow Builder.
+
+## License
+
+This repository is released under the MIT License. See the `LICENSE` file for details.
 
 ---
-
-

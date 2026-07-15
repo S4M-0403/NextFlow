@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next"
 import "./globals.css";
 
 const geistSans = Geist({
@@ -14,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Galaxy.ai",
+  title: "NextFlow",
   description: "Build AI workflows and run models instantly.",
 };
 
@@ -34,6 +35,7 @@ export default function RootLayout({
           afterSignOutUrl="/sign-in"
         >
           {children}
+          <Analytics />
         </ClerkProvider>
       </body>
     </html>
